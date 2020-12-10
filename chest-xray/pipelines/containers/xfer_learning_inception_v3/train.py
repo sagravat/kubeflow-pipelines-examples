@@ -89,35 +89,6 @@ def dataset_input_fn(filenames, num_epochs=None):
   # labels.
   return dataset
 
-def amain(unused_argv):
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--train", type=str, required=True)
-    parser.add_argument("--eval", type=str, required=True)
-    app_args = parser.parse_args()
-
-    train_file = app_args.train
-    eval_file = app_args.test
-
-    with tf.Graph().as_default() as g:
-        # Create an estimator
-        classifier = tf.estimator.Estimator(
-            model_fn=inceptionv3_model_fn, model_dir="/tmp/convnet_model")
-
-        # Set up logging for predictions
-        #tensors_to_log = {"probabilities": "softmax_tensor"}
-        #logging_hook = tf.train.LoggingTensorHook(
-            #tensors=tensors_to_log, every_n_iter=10)
-
-        # Train network.
-        classifier.train(
-            input_fn=lambda: dataset_input_fn([train_file],100),
-            steps=500,
-            #hooks=[logging_hook]
-        )
-
-        # Evaluate the model and print results.
-        eval_results = classifier.evaluate(input_fn=lambda: dataset_input_fn([eval_file]))
-        print(eval_results)
 
 
 if __name__ == "__main__":
